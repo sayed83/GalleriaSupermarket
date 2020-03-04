@@ -1,0 +1,153 @@
+﻿@model IEnumerable<GalleriaSupermarket.Models.ViewModel.SaleReportVm>
+@{
+    ViewBag.Title = "SalesReport";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+<section class="content-header">
+    <h1>
+        Sales Report
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Sales Report</a></li>
+        <li><a href="#">Index</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="report-search-box">
+                <ul class="report-searchList">
+                    <li>Sales Report ::</li>
+                    <li>
+                        <input type="date" id="fromDate" name="fromDate" class="form-control" />
+                    </li>
+                    <li>To</li>
+                    <li>
+                        <input type="date" id="toDate" name="toDate" class="form-control" />
+                    </li>
+                    <li>
+                        <select class="form-control" id="saleType" name="saleType">
+                            <option value="all">All</option>
+                            <option value="online">Online</option>
+                            <option value="local">Local</option>
+                        </select>
+                    </li>
+                    <li>
+                        <input type="text" id="SearchProduct" name="product" class="form-control" />
+                        <input type="hidden" value="" id="productId" />
+                    </li>
+                    <li>
+                        <select class="form-control" id="OutletName" name="outlet">
+                            <option value="all">All</option>
+                        </select>
+                    </li>
+                    <li>
+                        <button id="SearchReport" type="button" class="btn btn-primary btn-search">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </li>
+                </ul>
+            <div class="report-hold">
+                <table id="ItemShow" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Outlet</th>
+                            <th>Total Sale</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.ProductName</td>
+                                <td>@item.OutletName</td>
+                                <td>@item.TotalSale</td>
+                                <td>@item.SaleType</td>
+                                <td>@item.Date</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>            
+        </div>
+    </div>
+</section>
+<link href="~/Content/themes/base/autocomplete.css" rel="stylesheet" />
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('#ItemShow').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    { extend: 'copy', attr: { id: 'allan' } }, 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+
+            GetOutlet();
+            function GetOutlet() {
+                $.ajax({
+                    url: '/Report/GetOutlet',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (res) {
+                        var html;
+                        if (res != null) {
+                            $.each(res, function (index, row) {
+                                html = '<option value="' + row.name + '">' + row.name + '</option>';
+                                $('#OutletName').append(html);
+                            });
+                        }
+                    }
+                });
+            }
+
+            $('#SearchReport').click(function () {
+                var formDate = $('#fromDate').val();
+                var toDate = $('#toDate').val();
+                var saleType = $('#saleType').val();
+                var SearchProduct = $('#SearchProduct').val();
+                var OutletName = $('#OutletName').val();
+
+                //window.location.href = '/Report/SalesReportWithOptions?fromDate=' + formDate + '&toDate=' + toDate + '&saleType=' + saleType + '&product=' + SearchProduct + '&outlet=' + OutletName + '';
+                window.location.href = '/Report/SalesReportWithOptions?fromDate=' + formDate + '&toDate=' + toDate + '';
+            });
+
+            $('#SearchProduct').autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/ItemTransfer/AutoCompleteLostItem',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: { name: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return {
+                                    label: item.name, value: item.name, hidden: item.id
+                                }
+                            }))
+                        },
+                        messages: {
+                            noResults: "", results: ""
+                        }
+                    });
+                }
+            }).data("ui-autocomplete")._renderItem = function (ul, item) {
+                return $("<li></li>")
+                    .data("item.autocomplete", item)
+                    .append("<a href='javascript:void(0)' class='extProduct'  data-id='" + item.hidden + "'>" + item.label + "</a>")
+                    .appendTo(ul);
+            };
+
+            $(document).on('click','.extProduct',function () {
+                $this = $(this);
+                var id = $this.attr('data-id');
+                $('#productId').val(id);
+            });
+        });
+    </script>
+}

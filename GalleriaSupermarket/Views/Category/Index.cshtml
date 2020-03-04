@@ -1,0 +1,76 @@
+﻿@model IEnumerable<GalleriaSupermarket.Models.Category>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        Category
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Category</a></li>
+        <li><a href="#">Index</a></li>
+    </ol>
+</section>
+<section class="content">
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table id="ItemShow" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                   Category Name
+                </th>
+                <th>
+                    Status
+                </th>
+                <th class="nosort"></th>
+            </tr>
+        </thead>
+        <tbody>
+           @foreach (var item in Model)
+           {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CategoryName)
+                </td>
+                <td>
+                   @if(item.IsDeleted == false)
+                   {
+                       <span class="text-success">Active</span>
+                   }
+                </td>
+                <td>
+                    <ul class="actionList">
+                        <li>
+                            <a data-id="@item.CategoryID" href="javascript:void(0)" class="ViewBtn cmn-btn btn btn-success">
+                                <i class="fa fa-th-list" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-id="@item.CategoryID" href="javascript:void(0)" class="delBtn cmn-btn btn btn-danger">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+           }
+        </tbody>
+    </table>
+    </section>
+@section scripts
+{
+    <script>
+        $('#ItemShow').DataTable({
+            'aoColumnDefs': [{
+                'bSortable': false,
+                'aTargets': ['nosort']
+            }]
+        });
+    </script>
+}

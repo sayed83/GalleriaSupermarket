@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewBag.Title = "SupplierPayment";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+<section class="content-header">
+    <h1>
+        Supplier Payment
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Supplier Payment</a></li>
+        <li><a href="#">Index</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="get-alldueInvoice">
+        <select class="form-control" id="SupplierID">
+            <option>--- Select Supplier ---</option>
+        </select>
+    </div>
+    <div class="showDueInv">
+        <table id="showDueInv" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Order #</th>
+                    <th>Due Amount</th>
+                    <th>Payment</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+</section>
+
+@section scripts
+{
+    <script>
+        $.ajax({
+            url: '/Purchase/GetSupplier',
+            type: 'GET',
+            dataType: 'json',
+            success: function (res) {
+                var html;
+                $.each(res, function (index, row) {
+                    html = '<option value="' + row.id + '">' + row.name + '</option>';
+                    $('#SupplierID').append(html);
+                })
+            }
+        });
+        $('#SupplierID').change(function () {
+            var supid = parseInt($(this).val());
+            $.ajax({
+                url: '/Purchase/GetDueInvoiceBySpplier',
+                type: 'POST',
+                data: { id: supid },
+                dataType: 'json',
+                success: function (res) {
+                    $('#showDueInv tbody').empty();
+                    var html;
+                    $.each(res, function (index, row) {
+                        html = '<tr><td>' + row.invoice + '</td><td>' + row.outlet + '</td><td>' + row.dueamnt + '</td><td style="position:relative"><a class="paybutton" data-id="' + row.id + '" href="javascript:void(0)">Give Payment</a><div class="pmnt-div"><ul class="pmnt-list"><li><input type="text" class="form-control duePayment"/></li><li><button data-supid="'+row.supId+'" data-id="'+row.id+'"  type="button" class="btn btn-primary pmnt-btn">OK</button></li></ul></div></td></tr>'
+                        $('#showDueInv tbody').append(html);
+                    });
+                }
+            })
+        });
+
+        $('#showDueInv').on('click', '.paybutton', function () {
+            $(this).siblings('.pmnt-div').show();
+        });
+
+        $('#showDueInv').on('click', '.pmnt-btn', function (e) {
+            e.preventDefault();
+            var payment = $(this).parents('.pmnt-list').find('.duePayment').val();
+            payment = parseFloat(payment);
+            var supplier = parseInt($(this).attr('data-supid'));
+            var invId = parseInt($(this).attr('data-id'));
+
+            $.ajax({
+                url: '/Purchase/duePaidToSupplier',
+                type:'POST',
+                dataType:'json',
+                data: { InvoiceId: invId, supplierId: supplier, payAmount: payment },
+                success: function (res) {
+                    alert(res);
+                }
+            })
+
+        })
+
+    </script>
+}

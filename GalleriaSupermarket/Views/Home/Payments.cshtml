@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "Payments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- payment page-->
+<div class="privacy">
+    <div class="container">
+        <!-- tittle heading -->
+        <h3 class="tittle-w3l">
+            Payment
+            <span class="heading-style">
+                <i></i>
+                <i></i>
+                <i></i>
+            </span>
+        </h3>
+        <!-- //tittle heading -->
+        <div class="cart-content-box">
+            <!--Horizontal Tab-->
+
+            <div class="payment-box">
+                <ul class="payment-option">
+                    <li><a id="cod-option" href="javascript:void(0)">Cash on Delivery</a></li>
+                    <li><a id="onpmnt-option" href="javascript:void(0)">Online Payment</a></li>
+                </ul>
+                <div class="payment-ins">
+                    <div class="ins-box cod-box col-md-6">
+                        <img id="cod-img" class="img-responsive" src="~/Assets/img/no-upfront-payment.png" />
+                        <div style="display:none;" id="cod-payment" class="cod-payment">
+                            <h4>Transaction Details</h4>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="fa fa-mobile"></i></div>
+                                    <input type="text" class="form-control bNumber" id="bNumber" placeholder="Bkash Number">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="fa fa-qrcode"></i></div>
+                                    <input type="text" class="form-control tranNo" id="tranNo" placeholder="Transaction Number">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="fa fa-gift"></i></div>
+                                    <input type="button" data-pmnt="cod" data-method="bKash" class="btn btn-primary pmnt-btn" id="paymentSubmit" value="Place Order">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ins-box on-box col-md-6">
+                        <img id="on-img" class="img-responsive" src="~/Assets/img/paywith_mobile.png" />
+                        <div style="display:none;" id="pmnt-more" class="pmnt-more">
+                            <h4>Choose Option</h4>
+                            <ul class="moreOpt-list">
+                                <li>
+                                    <a id="more-bks" href="javascript:void(0)">
+                                        <img src="~/Assets/img/bkash-logo.jpg" />
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="more-rckt" href="javascript:void(0)">
+                                        <img src="~/Assets/img/rocket-logo.jpg" />
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="display:none;" id="on-payment" class="cod-payment">
+                            <h4>Transaction Details</h4>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="fa fa-mobile"></i></div>
+                                    <input type="text" class="form-control bNumber" id="onbNumber" placeholder="Payee Number">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="fa fa-qrcode"></i></div>
+                                    <input type="text" class="form-control tranNo" id="onTranNo" placeholder="Transaction Number">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="fa fa-gift"></i></div>
+                                    <input type="button" class="btn btn-primary pmnt-btn" id="paymentSubmit" value="Place Order">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Plug-in Initialisation-->
+        </div>
+    </div>
+</div>
+<!-- //payment page -->
+@section scripts
+{
+    <script src="~/Scripts/easyResponsiveTabs.js"></script>
+}

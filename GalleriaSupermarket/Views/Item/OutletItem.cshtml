@@ -1,0 +1,123 @@
+﻿@model IEnumerable<GalleriaSupermarket.Models.Item>
+
+@{
+    ViewBag.Title = "OutletItem";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        Item page
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Item</a></li>
+        <li><a href="#">Index</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div id="zeroAlert" style="display:none;" class="alert alert-danger fade in alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+        <div class="alertText">
+
+        </div>
+    </div>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table id="ItemShow" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Product.ProductName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AvailableQnty)
+                </th>
+                <th>Outlet</th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsAvailable)
+                </th>
+                <th class="nosort">Update Quantity</th>
+            </tr>
+
+        </thead>
+        <tbody></tbody>
+    </table>
+
+
+</section>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#ItemShow').DataTable({
+                'aoColumnDefs': [{
+                    'bSortable': false,
+                    'aTargets': ['nosort']
+                }]
+            });
+
+          $('#ItemShow').on('click', '.updateItemLink', function () {
+              $(this).siblings('.update-box').toggle();
+          });
+          $('#ItemShow').on('click', '.faTimes', function () {
+              $(this).parents('.update-box').hide();
+          })
+          $('#ItemShow').on('click', '.updateBtn', function (e) {
+              e.preventDefault();
+              $(this).parents('.update-box').hide();
+              var itemId = parseInt($(this).attr('data-id'));
+              var qnty = parseFloat($(this).parent().siblings('li').children('.updateInput').val());
+              $.ajax({
+                  url: '/Item/QuantityRowUpdate',
+                  type:'POST',
+                  dataType:'json',
+                  data: { id: itemId, Qnty: qnty },
+                  success: function (res) {
+                      $('.alertText').empty();
+                      if (res == 'zeroQnty') {
+                          $('#zeroAlert').addClass('alert-danger').removeClass('alert-success');
+                          $('.alertText').append('<strong>Server Says!</strong> Something wrong in your Request!');
+                          $('#zeroAlert').show();
+                      }
+                      else if (res == true) {
+                          $('#zeroAlert').addClass('alert-success').removeClass('alert-danger');
+                          $('.alertText').append('<strong>Success!</strong> Item Quantity Updated!');
+                          $('#zeroAlert').show();
+                          autoItemPostback();
+                      } else {
+                          $('#zeroAlert').addClass('alert-danger').removeClass('alert-success');
+                          $('.alertText').append('<strong>Server Says!</strong> Something wrong in your Request!');
+                          $('#zeroAlert').show();
+                      }
+
+                  }
+              });
+
+          });
+          autoItemPostback();
+          function autoItemPostback() {
+              $.ajax({
+                  url: '/Item/OwnOutletItem',
+                  type:'GET',
+                  dataType: 'json',
+                  success: function (res) {
+                      $('#ItemShow tbody').empty();
+                      var html;
+                      $.each(res, function (i, r) {
+                          var ckStock = r.status;
+                          if (ckStock == true) {
+                              ckStock ='<span style="color:green;">In Stock</span>';
+                          } else {
+                              ckStock = '<span style="color:red;">Out Stock</span>';
+                          }
+                          html = '<tr><td>' + r.name + '</td><td>' + r.qnty + '</td><td>' + r.outlet + '</td><td id="'+r.id+'">'+ckStock+'</td><td style="position:relative;"><a href="javascript:void(0)" class="updateItemLink">Update</a><div class="update-box"><ul class="updateList"><li><input type="text" placeholder="eg:15" class="form-control updateInput"/></li><li><input data-id="' + r.id + '" type="button" class="btn btn-warning updateBtn" value="Update"/></li><li><i class="fa fa-times faTimes"></i></li></ul></div></td></tr>';
+                          $('#ItemShow tbody').append(html);
+                      });
+                  }
+              })
+          }
+      })
+    </script>
+}

@@ -1,0 +1,195 @@
+﻿
+@{
+    ViewBag.Title = "GetOutletExpense";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        Outlet Cost
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Outlet Cost</a></li>
+        <li><a href="#">Index</a></li>
+    </ol>
+</section>
+<section class="content">
+    <table id="ItemShow" class="view-cost table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class="slsort" align="center">#</th>
+                <th>Operation Cost</th>
+                <th>Electricity Bill</th>
+                <th>Staff Salary</th>
+                <th>Other Cost</th>
+                <th>Month</th>
+                <th>On Hand</th>
+                <th>Status</th>
+                <th class="nosort"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</section>
+
+<!--Modal-->
+<div id="modal-table" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="table-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <span class="white">&times;</span>
+                    </button>
+                    You Want to received this Payment?
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <h4>Are sure to handle this <strong style="color:red">Order?</strong></h4>
+                <div style="text-align:center; display:none" id="loaderDiv">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-danger" id="btnReject">No, Thanks</a>
+                <a class="btn btn-info" id="orderSubmit">Yes, Please</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div class="detais-box" style="display:none;">
+    <i class="fa fa-times fclose" aria-hidden="true"></i>
+    <div class="inv-head">
+        <h2> Operation Cost Details</h2>
+    </div>
+    <div class="loading" style="display:none;text-align:center;">
+        <img src="~/Assets/ajax-loader.gif" />
+    </div>
+    <div class="main-row">
+        <table id="detailShow" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="text-align:center !important">#</th>
+                    <th>Cost Head</th>
+                    <th>Cost Amnt</th>
+                    <th>Cost By</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#ItemShow').DataTable({
+                'aoColumnDefs': [{
+                    'bSortable': false,
+                    'aTargets': ['nosort', 'slsort']
+                }]
+            });
+
+            $('.view-cost').on('click', '.ReceivedBtn', function () {
+                ShowforConfirm();
+                var id = $(this).attr('data-id');
+                $('#orderSubmit').attr('data-id', id);
+            });
+            var ShowforConfirm = function () {
+                $('#modal-table').modal('show');
+            }
+
+            $('#orderSubmit').click(function () {
+                var id = parseInt($(this).attr('data-id'));
+                $.ajax({
+                    url: '/Expense/StatusChange',
+                    type: 'POST',
+                    data: { eid: id },
+                    dataType: 'json',
+                    success: function (res) {
+                        getOutletExpHistory();
+                        $('#modal-table').modal('hide');
+                    }
+                })
+            });
+
+            $('#btnReject').click(function () {
+                $('#modal-table').modal('hide');
+            });
+
+            $('.fclose').click(function () {
+                $('.detais-box').hide();
+            });
+
+            $('#ItemShow').on('click', '.show-details-btn', function () {
+                var rowid = $(this).parents('tr').attr('data-id');
+                showOperationCostDetails(rowid);
+            })
+
+            getOutletExpHistory();
+            function getOutletExpHistory() {
+                $.ajax({
+                    url: '/Expense/GetOutletExpenseHistory',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (res) {
+                        $('.view-cost tbody').empty();
+                        var html;
+                        var status;
+                        for (var i = 0; i < res.length; i++) {
+                            if (res[i].status == false) {
+                                status = 'Pending';
+                            } else {
+                                status = 'Payment Received';
+                            }
+                        }
+                        if (res.length > 0) {
+                            $.each(res, function (index, row) {
+                                html = '<tr data-id="'+row.id+'"><td align="center"></td><td>' + row.operation + '</td><td>' + row.elec + '</td><td>' + row.salary + '</td><td>' + row.other + '</td><td>' + row.month + '</td><td>'+row.cash+'</td><td><a data-id="' + row.id + '" href="javascript:void(0)" class="ReceivedBtn btn btn-primary">' + status + '</a></td><td><div class="action-buttons"><a href="javascript:void(0)" class="green bigger-140 show-details-btn" title="Show Details"><i class="ace-icon fa fa-th-list"></i><span class="sr-only">Details</span></a></div></td></tr>';
+                            });
+                            $('.view-cost tbody').append(html);
+                        } else {
+                            html = '<tr><td align="center" colspan="7">No Data Available....</td></tr>';
+                            $('.view-cost tbody').append(html);
+                        }
+
+                    }
+                });
+            }
+
+        });
+
+        function showOperationCostDetails(eid) {
+            $('.loading').show();
+            $.ajax({
+                url: '/Expense/GetOperationCostDetails',
+                type: 'POST',
+                dataType: 'json',
+                data: { expId: parseInt(eid) },
+                success: function (res) {
+                    $('.detais-box').show();
+                    $('#detailShow tbody').empty();
+                    setTimeout(function () {
+                        $('.loading').hide();
+                        var html;
+                        $.each(res, function (index, row) {
+                            html = '<tr><td align="center"></td><td>' + row.head + '</td><td>$' + row.amnt + '</td><td>' + row.costBy + '</td><td>'+row.date+'</td></tr>';
+                            $('#detailShow tbody').append(html);
+                        });
+                    }, 1000);
+
+                }
+            });
+        }
+
+    </script>
+}

@@ -1,0 +1,338 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Grocery Shop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/Assets/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery.steps.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    @Scripts.Render("~/bundles/modernizr")
+    <!-- fonts -->
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800" rel="stylesheet">
+</head>
+
+<body class="bg-body">
+    <div class="popup-box" id="popupBox">
+        <div id="mainPopup" class="main-box">
+            <div class="top-location">
+                <img src="~/images/Location.png" />
+
+                <span class="closeIcon" id="popupClose">X</span>
+            </div>
+
+            <div class="popupInner">
+                <div class="form-group map-sign">
+                    <i class="fa fa-map-signs"></i>
+                    <h3>Select Your Delivery Location</h3>
+                </div>
+                <div class="form-group">
+                    <ul class="location-list">
+                        <li>
+                            <select id="OutletCity" class="form-control">
+                                <option>--- Select City ---</option>
+                            </select>
+                        </li>
+                        <li>
+                            <select id="OutletLoc" class="form-control">
+                                <option>--- Select Location ---</option>
+                            </select>
+                        </li>
+                        <li>
+                            <button id="Reset" class="btn btn-danger rst-btn">Reset <i class="fa fa-refresh"></i></button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <strong class="strong-text">All of Galleria, now at your fingertips</strong>
+
+                    <p class="loc-tahnk">Thank you for visiting our Beta site. We are delighted to start sharing our brand new shopping experience with you!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- header-bot-->
+    <div class="header-bot">
+        <div class="header-bot_inner_wthreeinfo_header_mid">
+            <!-- header-bot-->
+            <div class="col-md-4 logo_agile">
+            </div>
+            <!-- header-bot -->
+            <div class="col-md-8 header">
+                <!-- header lists -->
+                <ul>
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#myModal1">
+                            <span class="fa fa-truck" aria-hidden="true"></span>Free Shipping
+                        </a>
+                    </li>
+                    <li>
+                        <a id="cngLoc" href="javascript:void(0)"><span class="fa fa-building" aria-hidden="true"></span> Change Location</a>
+                    </li>
+                    
+                    @Html.Partial("_UserLoginPartial")
+                    
+                    <li>
+                        <div class="wthreecartaits wthreecartaits2 cart cart">
+                            <button id="viewCart" class="w3view-cart" type="button">
+                                <i class="fa fa-cart-arrow-down" aria-hidden="true"></i> <span class="cart-text"></span>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+                <!-- cart details -->
+                <div id="cartModal" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <ul class="cartList">
+                                    <li>
+                                        <img class="cartImg" src="~/Assets/img/cart_icon.png" />
+                                    </li>
+                                    <li>Galleria's Busket</li>
+                                </ul>
+                            </div>
+                            <div class="modal-body">
+                                <div class="cart-body">
+                                    <table id="cartBox" class="table table-striped">
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <span class="CartTotal" id="CartTotal"></span>
+                                <a href="javascript:void(0)" id="cartHide" class="btn btn-warning contBtn">Continue Shopping</a>
+                                <a href="@Url.Action("CheckOut","Home")" id="Checkout" class="btn btn-primary ckBtn">Checkout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+                <!-- //cart details -->
+                <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="@Url.Action("Index","Home")">
+                    <img class="g-logo" src="~/Assets/img/logo.png" />
+                </a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Delivery</a></li>
+                <li><a href="#">FAQS</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="clearfix"></div>
+    <!-- shop locator (popup) -->
+    <div class="body-content">
+        @RenderBody()
+    </div>
+    <!-- footer -->
+    <footer style="background:#ffffff;">
+        <div class="container">
+            <!-- footer first section -->
+            <p class="footer-main">
+                <span>"Galleria – online super market"</span> Did you ever imagine that the freshest of fruits and vegetables, top quality pulses and food grains, dairy products and hundreds of branded items could be handpicked and delivered to your home, all at the click of a button? From household cleaning products to beauty and makeup, Galleria has everything you need for your daily needs. Hassle-free Home Delivery options.
+            </p>
+            <!-- //footer first section -->
+            <!-- footer second section -->
+            <div class="w3l-grids-footer">
+                <div class="col-xs-4 offer-footer">
+                    <div class="col-xs-4 icon-fot">
+                        <span class="fa fa-refresh" aria-hidden="true"></span>
+                    </div>
+                    <div class="col-xs-8 text-form-footer">
+                        <h3>Browse and Place an Order</h3>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="col-xs-4 offer-footer">
+                    <div class="col-xs-4 icon-fot">
+                        <span class="fa fa-map-marker" aria-hidden="true"></span>
+                    </div>
+                    <div class="col-xs-8 text-form-footer">
+                        <h3>Enter Shipping Address</h3>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="col-xs-4 offer-footer">
+                    <div class="col-xs-4 icon-fot">
+                        <span class="fa fa-safari" aria-hidden="true"></span>
+                    </div>
+                    <div class="col-xs-8 text-form-footer">
+                        <h3>Receive Order On Time</h3>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <!-- //footer second section -->
+            <!-- footer third section -->
+            <div class="footer-info w3-agileits-info">
+                <!-- footer categories -->
+                <div class="col-sm-5 address-right">
+                    <div class="col-xs-6 footer-grids">
+                        <h3>Categories</h3>
+                        <ul>
+                            <li>
+                                <a href="#">Fashion &amp; Clothes</a>
+                            </li>
+                            <li>
+                                <a href="#">Fruits &amp; Vegetable</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-6 footer-grids agile-secomk">
+                        <ul>
+                            <li>
+                                <a href="#">Kitchen &amp; Dining</a>
+                            </li>
+                            <li>
+                                <a href="#">Grocery</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <!-- //footer categories -->
+                <!-- quick links -->
+                <div class="col-sm-5 address-right">
+                    <div class="col-xs-6 footer-grids">
+                        <h3>Quick Links</h3>
+                        <ul>
+                            <li>
+                                <a href="#">About Us</a>
+                            </li>
+                            <li>
+                                <a href="#">Contact Us</a>
+                            </li>
+                            <li>
+                                <a href="#">Faqs</a>
+                            </li>
+                            <li>
+                                <a href="#">Terms of use</a>
+                            </li>
+                            <li>
+                                <a href="#">Privacy Policy</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-6 footer-grids">
+                        <h3>Get in Touch</h3>
+                        <ul>
+                            <li>
+                                <i class="fa fa-map-marker"></i>126/A, Sk Mojib Road, Agrabad, Chittagong, BD.
+                            </li>
+                            <li>
+                                <i class="fa fa-mobile"></i> 0175 705 7721
+                            </li>
+                            <li>
+                                <i class="fa fa-phone"></i> 0184 001 0865
+                            </li>
+                            <li>
+                                <i class="fa fa-envelope-o"></i>
+                                <a href="mailto:example@mail.com"> info@example.com</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- //quick links -->
+                <!-- social icons -->
+                <div class="col-sm-2 footer-grids  w3l-socialmk">
+                    <h3>Follow Us on</h3>
+                    <div class="social">
+                        <ul>
+                            <li>
+                                <a class="icon fb" href="#">
+                                    <i class="fa fa-facebook"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="icon tw" href="#">
+                                    <i class="fa fa-twitter"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="icon gp" href="#">
+                                    <i class="fa fa-google-plus"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="agileits_app-devices">
+                        <h5>Download the App</h5>
+                        <a href="#">
+                            <img src="~/images/1.png" alt="">
+                        </a>
+                        <a href="#">
+                            <img src="~/images/2.png" alt="">
+                        </a>
+                        <div class="clearfix"> </div>
+                    </div>
+                </div>
+                <!-- //social icons -->
+                <div class="clearfix"></div>
+            </div>
+            <!-- //footer third section -->
+            <!-- footer fourth section (text) -->
+            <div class="agile-sometext">
+                <div class="sub-some child-momu">
+                    <h5>Payment Method</h5>
+                    <ul>
+                        <li>
+                            <img src="~/images/pay2.png" alt="">
+                        </li>
+                        <li>
+                            <img src="~/images/pay5.png" alt="">
+                        </li>
+                        <li>
+                            <img src="~/images/pay1.png" alt="">
+                        </li>
+                        <li>
+                            <img src="~/images/pay7.png" alt="">
+                        </li>
+                        <li>
+                            <img src="~/images/pay8.png" alt="">
+                        </li>
+                        <li>
+                            <img src="~/images/pay9.png" alt="">
+                        </li>
+                    </ul>
+                </div>
+                <!-- //payment -->
+            </div>
+            <!-- //footer fourth section (text) -->
+        </div>
+    </footer>
+    
+    <!-- //footer -->
+    <!-- copyright -->
+    <div class="copy-right">
+        <div class="container">
+            <p>&copy; @DateTime.Now.Year <strong><a href="@Url.Action("Index","Home")"><span class="logo-text-main">Galleria</span><span class="super">super</span><span class="market">market</span></a>.</strong> All rights reserved.</p>
+        </div>
+    </div>
+    <!-- //copyright -->
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-ui.js"></script>
+    <script src="~/Scripts/Custom/globalCart.js"></script>
+    <script src="~/Scripts/Custom/appSettings.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
+

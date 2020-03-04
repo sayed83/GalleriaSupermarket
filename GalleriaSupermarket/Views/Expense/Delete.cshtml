@@ -1,0 +1,97 @@
+﻿@model GalleriaSupermarket.Models.Expense
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Expense</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Outlet.OutletName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Outlet.OutletName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ElectricityBill)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ElectricityBill)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OutletOperationCost)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OutletOperationCost)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OutletStaffSalary)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OutletStaffSalary)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OtherExpense)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OtherExpense)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExpenseIssueDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExpenseIssueDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Month)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Month)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsReceived)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsReceived)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsDeleted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsDeleted)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

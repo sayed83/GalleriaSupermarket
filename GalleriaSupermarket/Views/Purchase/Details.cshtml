@@ -1,0 +1,51 @@
+﻿@model GalleriaSupermarket.Models.Purchase
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Purchase</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseInvoice.PartNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseInvoice.PartNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SubCategory.SubCategoryName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SubCategory.SubCategoryName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Quantity)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PurchaseID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

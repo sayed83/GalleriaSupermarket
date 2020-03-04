@@ -1,0 +1,20 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+@{
+    ViewBag.Title = "Error";
+}
+
+<div class="container">
+    <div class="confirm-email-box">
+        <i class="fa fa-bullseye bullseye" aria-hidden="true"></i>
+        <h1 class="text-danger">Error.</h1>
+        @if (ViewBag.errorMessage != null)
+        {
+            <h2 class="text-danger">@ViewBag.errorMessage</h2>
+        }
+
+    </div>
+
+</div>
+
+

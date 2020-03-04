@@ -1,0 +1,67 @@
+﻿@model GalleriaSupermarket.Models.Outlet
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Outlet</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.City.CityName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City.CityName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OutletName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OutletName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShortAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShortAddress)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DetailsAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DetailsAddress)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreationDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreationDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsDeleted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsDeleted)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.OutletID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

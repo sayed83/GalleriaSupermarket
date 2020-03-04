@@ -1,0 +1,36 @@
+﻿@using ReportViewerForMvc;
+@{
+    ViewBag.Title = "GetCategoryWiseProduct";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+<style>
+    .catwise-box iframe {
+        height: 700px !important;
+        width: 100% !important;
+        background: #ffffff;
+    }
+    .catwise-box iframe ::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .catwise-box > iframe #ReportViewer1_fixedTable {
+        margin: 0 auto !important;
+        border: 1px solid #dedede;
+    }
+</style>
+
+<section class="content-header">
+    <h1>
+        All Product
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Report</a></li>
+        <li><a href="#">All Product</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="catwise-box">
+        @Html.ReportViewer(ViewBag.ReportViewer as Microsoft.Reporting.WebForms.ReportViewer)
+    </div>   
+</section>

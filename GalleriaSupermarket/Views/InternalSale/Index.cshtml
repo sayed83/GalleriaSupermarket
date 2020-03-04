@@ -1,0 +1,143 @@
+﻿@model IEnumerable<GalleriaSupermarket.Models.ViewModel.InternalInvoiceVm>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        Outlet Sale
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Outlet Sale</a></li>
+        <li><a href="#">Index</a></li>
+    </ol>
+</section>
+<section class="content">
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table id="ItemShow" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Status</th>
+                <th>Order Handle</th>
+                <th>Payment Type</th>
+                <th>Invoice Date</th>
+                <th class="nosort">Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr data-id="@item.InvoiceID">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PartNumber)
+                    </td>
+                    <td>
+                        @if (item.IsPaid == true)
+                        {
+                            <span style="color:green">Complete</span>
+                        }
+                        else
+                        {
+                            <span style="color:red;">Not Complete</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MadyBy)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PaymentType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InvoiceDate)
+                    </td>
+                    <td align="center">
+                        <div class="action-buttons">
+                            <a href="javascript:void(0)" class="green bigger-140 show-details-btn" title="Show Details">
+                                <i class="ace-icon fa fa-th-list"></i>
+                                <span class="sr-only">Details</span>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="detais-box" style="display:none;">
+        <i class="fa fa-times fclose" aria-hidden="true"></i>
+        <div class="inv-head">
+            <h2> Invoice Product Details</h2>
+        </div>
+        <div class="loading" style="display:none;text-align:center;">
+            <img src="~/Assets/ajax-loader.gif" />
+        </div>
+        <div class="main-row">
+            <table id="detailShow" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center !important">#</th>
+                        <th>Product Name</th>
+                        <th>Size</th>
+                        <th>Price</th>
+                        <th>Quanity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#ItemShow').DataTable({
+                'aoColumnDefs': [{
+                    'bSortable': false,
+                    'aTragets':['nosort']
+                }]
+            });
+            $('.fclose').click(function () {
+                $('.detais-box').hide();
+            });
+
+            $('#ItemShow').on('click', '.show-details-btn', function () {
+                var rowid = $(this).parents('tr').attr('data-id');
+                showInvoiceDetails(rowid);
+            })
+
+        });
+
+    function showInvoiceDetails(invid){
+        $('.loading').show();
+        $.ajax({
+            url: '/InternalSale/GetOutletInvoiceDetails',
+            type:'POST',
+            dataType: 'json',
+            data:{invoiceid:parseInt(invid)},
+            success: function (res) {
+                $('.detais-box').show();
+                $('#detailShow tbody').empty();
+                setTimeout(function () {
+                    $('.loading').hide();
+                    var html;
+                    $.each(res, function (index, row) {
+                        html = '<tr><td align="center"></td><td>' + row.name + '</td><td>'+row.size+'</td><td>$' + row.price + '</td><td>' + row.qnty + '</td><td>$' + Number(row.price * row.qnty) + '</td></tr>';
+                        $('#detailShow tbody').append(html);
+                    });
+                }, 1000);
+
+            }
+        });
+    }
+
+    </script>
+}

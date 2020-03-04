@@ -1,0 +1,47 @@
+﻿@model IEnumerable<GalleriaSupermarket.Models.ViewModel.SaleReportVm>
+@{
+    ViewBag.Title = "SalesReportWithOptions";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        Sales Report
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Sales Report</a></li>
+        <li><a href="#">Index</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="report-search-box">
+            <div class="report-hold">
+                <table id="ItemShow" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Outlet</th>
+                            <th>Total Sale</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.ProductName</td>
+                                <td>@item.OutletName</td>
+                                <td>@item.TotalSale</td>
+                                <td>@item.SaleType</td>
+                                <td>@item.Date</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

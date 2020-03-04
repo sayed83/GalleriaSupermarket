@@ -1,0 +1,91 @@
+﻿@model GalleriaSupermarket.Models.Product
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Product</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Brand.BrandName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Brand.BrandName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SubCategory.SubCategoryName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SubCategory.SubCategoryName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProductName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProductName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Unit)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Unit)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OtherPrice)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OtherPrice)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Discount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Discount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Vat)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Vat)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsDeleted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsDeleted)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ProductID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

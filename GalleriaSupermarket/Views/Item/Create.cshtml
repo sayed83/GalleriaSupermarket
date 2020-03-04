@@ -1,0 +1,158 @@
+﻿@model GalleriaSupermarket.Models.Item
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        Item Create
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Item</a></li>
+        <li><a href="#">Create</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="col-md-12">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">Category</label>
+                    <div class="col-md-10">
+                        <select id="CategoryID" class="form-control">
+                            <option value="">--- Select Category ---</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">Subcategory</label>
+                    <div class="col-md-10">
+                        <select disabled="disabled" id="SubCategoryID" class="form-control">
+                            <option value="">--- Select Subcategory ---</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class = "control-label col-md-2" >Product Name</label>
+                    <div class="col-md-10">
+                        <select disabled="disabled" id="ProductID" name="ProductID" class="form-control">
+                            <option value="">--- Select Subcategory ---</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AvailableQnty, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.AvailableQnty, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.AvailableQnty, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    </div>
+</section>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+
+            $(document).ready(function () {
+                //Get Category
+                $.ajax({
+                    url: '/Home/GetCategories',
+                    type: 'GET',
+                    success: function (res) {
+                        var html;
+                        $.each(res, function (index, row) {
+                            html = '<option value="' + row.id + '">' + row.name + '</option>';
+                            $('#CategoryID').append(html);
+                        })
+                    }
+                });
+
+                //Get Sub Category based on Category
+                $('#CategoryID').change(function () {
+                    if ($(this).val() == 1) {
+                        $('#Size-row').show();
+                    }
+                    $('#SubCategoryID').empty();
+                    $.ajax({
+                        url: '/Home/GetSubCategories',
+                        type: 'POST',
+                        data: { id: $('#CategoryID').val() },
+                        dataType: 'json',
+                        success: function (res) {
+                            var html;
+                            var resData = $.isEmptyObject(res);//check array empty or not :: return true or false
+                            if (resData === true) {
+                                $('#SubCategoryID').attr('disabled', true);
+                                html = '<option value="0">No Data Available</option>';
+                                $('#SubCategoryID').append(html);
+                            } else {
+                                var common = { id: 0, name: '---- Select Sub Category ----' }
+                                //res.splice(position, numberOfItemToRemove, item)
+                                res.splice(0, 0, common); //Add array object
+                                $.each(res, function (index, row) {
+                                    $('#SubCategoryID').removeAttr('disabled');
+                                    html = '<option value="' + row.id + '">' + row.name + '</option>';
+                                    $('#SubCategoryID').append(html);
+                                })
+                            }
+
+                        }
+                    })
+                });
+
+                //Get Product based on subcategory
+                $('#SubCategoryID').change(function () {
+                    $('#ProductID').empty();
+                    $.ajax({
+                        url: '/Home/GetProducts',
+                        type: 'POST',
+                        data: { id: $('#SubCategoryID').val() },
+                        dataType: 'json',
+                        success: function (res) {
+                            var html;
+                            var resData = $.isEmptyObject(res);//check array empty or not :: return true or false
+                            if (resData === true) {
+                                $('#ProductID').attr('disabled', true);
+                                html = '<option value="0">No Data Available</option>';
+                                $('#ProductID').append(html);
+                            } else {
+                                var common = { id: 0, name: '---- Select Product ----' }
+                                //res.splice(position, numberOfItemToRemove, item)
+                                res.splice(0, 0, common); //Add array object
+                                $.each(res, function (index, row) {
+                                    $('#ProductID').removeAttr('disabled');
+                                    html = '<option value="' + row.id + '">' + row.name + '</option>';
+                                    $('#ProductID').append(html);
+                                })
+                            }
+
+                        }
+                    })
+                });
+
+            });
+    </script>
+}

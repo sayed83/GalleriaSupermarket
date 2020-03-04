@@ -1,0 +1,164 @@
+﻿@model IEnumerable<GalleriaSupermarket.Models.ViewModel.PurchaseInvoiceVm>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        Purchase
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Purchase</a></li>
+        <li><a href="#">Index</a></li>
+    </ol>
+</section>
+<section class="content">
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table id="ItemShow" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Total</th>
+                <th>Paid</th>
+                <th>Due</th>
+                <th>Outlet</th>
+                <th>Supplier</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Details</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr data-id="@item.PurchaseInvoiceID">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PartNumber)
+                    </td>
+                    <td>
+                       <span>$@Html.DisplayFor(modelItem => item.TotalPrice)</span>
+                    </td>
+                    <td>
+                        <span>$@Html.DisplayFor(modelItem => item.PaidAmount)</span>
+                    </td>
+
+                    <td>
+                        @if (item.DueAmount == 0)
+                        {
+                            <span>Paid</span>
+                        }
+                        else
+                        {
+                            <span>$@Html.DisplayFor(modelItem => item.DueAmount)</span>
+                        }
+                        
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OutletName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyName)
+                    </td>
+                    <td>
+                        @if(item.IsPaid == false)
+                        {
+                            <span style="color:red;">Not Paid</span>
+                        }
+                        else
+                        {
+                            <span style="color:green;">Paid</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InvoiceDate)
+                    </td>
+                    <td align="center">
+                        <div class="action-buttons">
+                            <a href="javascript:void(0)" class="green bigger-140 show-details-btn" title="Show Details">
+                                <i class="ace-icon fa fa-th-list"></i>
+                                <span class="sr-only">Details</span>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
+
+<div class="detais-box" style="display:none;">
+    <i class="fa fa-times fclose" aria-hidden="true"></i>
+    <div class="inv-head">
+        <h2> Invoice Product Details</h2>
+    </div>
+    <div class="loading" style="display:none;text-align:center;">
+        <img src="~/Assets/ajax-loader.gif" />
+    </div>
+    <div class="main-row">
+        <table id="detailShow" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="text-align:center !important">#</th>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Quanity</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts
+{
+<script>
+
+    $(function () {
+        $('#ItemShow').DataTable()
+    });
+
+    $(document).ready(function () {
+        $('.fclose').click(function () {
+            $('.detais-box').hide();
+        });
+
+        $('.show-details-btn').click(function () {
+            var rowid = $(this).parents('tr').attr('data-id');
+            showInvoiceDetails(rowid);
+        })
+
+    })
+
+    function showInvoiceDetails(invid){ 
+        $('.loading').show();
+        
+        $.ajax({
+            url: '/Purchase/GetInvoiceDetails',
+            type:'POST',
+            dataType: 'json',
+            data:{invoiceid:parseInt(invid)},
+            success: function (res) {
+                $('.detais-box').show();
+                $('#detailShow tbody').empty();
+                setTimeout(function () {
+                    $('.loading').hide();
+                    var html;
+                    $.each(res, function (index, row) {
+                        html = '<tr><td align="center"></td><td>' + row.name + '</td><td>$' + row.price + '</td><td>' + row.qnty + '</td><td>$' + Number(row.price * row.qnty) + '</td></tr>';
+                        $('#detailShow tbody').append(html);
+                    });
+                }, 1000);
+                
+            }
+        });
+    }
+</script>
+}

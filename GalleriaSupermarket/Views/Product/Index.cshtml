@@ -1,0 +1,78 @@
+﻿@model IEnumerable<GalleriaSupermarket.Models.ViewModel.ProductImageVm>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        Product
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Product</a></li>
+        <li><a href="#">Index</a></li>
+    </ol>
+</section>
+<section class="content">
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table id="ItemShow" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class="nosort" >Product</th>
+                <th>Name</th>
+                <th>Unit</th>
+                <th>Brand</th>
+                <th>Price</th>
+                <th class="nosort"></th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img class="pro-img" src="/App_File/ProductImage/@item.ImageUrl" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Unit)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BrandName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" href="@Url.Action("Edit","Product", new { id = item.ProductID })">
+                            <i class="fa fa-edit" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+
+</section>
+@section scripts
+{
+    <script>
+      $(function () {
+          $('#ItemShow').DataTable({
+              'aoColumnDefs': [{
+                  'bSortable':false,
+                  'aTargets':['nosort']
+              }]
+          })
+      })
+    </script>
+}

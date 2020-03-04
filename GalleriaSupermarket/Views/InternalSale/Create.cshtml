@@ -1,0 +1,187 @@
+﻿@model IEnumerable<GalleriaSupermarket.Models.ViewModel.LocalSaleVm>
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        Create
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Outlet Sale</a></li>
+        <li><a href="#">Create</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="col-md-5">
+        <table id="SaleProduct" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Product (Qnty)</th>
+                    <th class="nosort"></th>
+                    <th class="nosort"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="proName">
+                            @item.ProductName (<strong id="Qty @item.ItemID" style="color:green">@item.AvailableQnty</strong>)
+                        </td>
+                        <td>
+                            <select data-price="@item.Price" data-actualprice="" data-proid="@item.ProductID" class="SizeList prosize" style="width:50px;">
+                                <option>size</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button type="button" id="Btn @item.ItemID" data-size="" data-id="@item.ItemID" data-name="@item.ProductName" data-price="@item.Price" data-count="1" class="btn btn-primary addcart">+</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-7">
+        <div class="saleInvoice">
+            <div>
+                <table class="table customer-box">
+                    <tr>
+                        <td>
+                            <p>Customer Name</p>
+                            <input type="text" placeholder="Customer" id="Customer" class="form-control" />
+                        </td>
+                        <td>
+                            <p>Contact Number</p>
+                            <input type="text" placeholder="Contact Number" id="Contact" class="form-control" />
+                        </td>
+                        <td colspan="2">
+                            <p>Payment Type</p>
+                            <select class="form-control" id="Payment">
+                                <option value="0">--- Payment Method ---</option>
+                                <option value="cash">Cash</option>
+                                <option value="cheque">Cheque</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="Invoice-box">
+
+                <table id="invTable" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Product Name</th>
+                            <th>Size</th>
+                            <th>Price</th>
+                            <th></th>
+                            <th>Quantity</th>
+                            <th></th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        <!--Product Add to Invoice-->
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="7" style="text-align:right;">Gross Total</th>
+                            <th id="GrossAmount">0.00</th>
+
+                        </tr>
+
+                        <tr>
+                            <th colspan="7" style="text-align:right;">Discount</th>
+                            <th><input type="text" placeholder="0.00" id="Discount" class="form-control" /></th>
+                        </tr>
+
+                        <tr>
+                            <th colspan="7" style="text-align:right;">Net Total</th>
+                            <th id="NetAmount">0.00</th>
+                        </tr>
+                        <tr>
+                            <td colspan="8" align="right">
+                                <input type="button" id="Submit" value="Payout & Complete" class="btn btn-primary" />
+                            </td>
+                        </tr>
+                    </tfoot>
+
+                </table>
+                <div id="showSuccess" class="show-status">
+                    <p><i class="fa fa-check success-icon" aria-hidden="true"></i> Order successfully Complete</p>
+                </div>
+                <div id="showError" class="show-status error-status">
+                    <p><i class="fa fa-times success-icon error-icon" aria-hidden="true"></i> Something went wrong!</p>
+                </div>
+                <div style="padding:0 20px 10px;">
+                    @Html.ActionLink("Back to List", "Index")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Modal-->
+<div id="modal-table" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header no-padding">
+                <div class="table-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <span class="white">&times;</span>
+                    </button>
+                   Payment Complete?
+                </div>
+            </div>
+
+            <div class="modal-body no-padding">
+                <h4>Are sure to handle this <strong style="color:red">Order?</strong></h4>
+                <div style="text-align:center; display:none" id="loaderDiv">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-danger" onclick="RejectOrder()" id="btnReject">No, Thanks</a>
+                <a class="btn btn-info" id="orderSubmit">Yes, Please</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+@section scripts
+{
+    <script src="~/Scripts/Custom/internalcart.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#SaleProduct').DataTable({
+                'aoColumnDefs': [{
+                    'bSortable': false,
+                    'aTargets': ['nosort']
+                }],
+                oLanguage: {
+                    oPaginate: {
+                        sNext: '<span class="pagination-fa"><i class="fa fa-chevron-right" ></i></span>',
+                        sPrevious: '<span class="pagination-fa"><i class="fa fa-chevron-left" ></i></span>'
+                    }
+                }
+            });
+
+            $('#Submit').click(function () {
+                ShowforConfirm();
+            })
+            var ShowforConfirm = function () {
+                $('#modal-table').modal('show');
+            }
+
+            var RejectOrder = function () {
+                $('#modal-table').modal('hide');
+            }
+        });
+        
+    </script>
+}

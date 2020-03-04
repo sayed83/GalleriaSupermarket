@@ -1,0 +1,163 @@
+﻿@model GalleriaSupermarket.Models.ApplicationUser
+@{
+    ViewBag.Title = "UserProfile";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        My Profile
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Profile</a></li>
+        <li><a href="#">Edit</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="profile-container">
+        <div class="row">
+            <div class="col-md-9">
+                <!-- Custom Tabs -->
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#tab_1" data-toggle="tab">Profle</a></li>
+                        <li><a href="#tab_2" data-toggle="tab">Change Password</a></li>
+                        <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_1">
+                            <div class="row">                               
+
+                                <!-- edit form column -->
+                                <div class="col-md-12 personal-info">
+                                    <h3>Personal info</h3>
+
+                                    <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" action="@Url.Action("UserProfile","Account")">
+                                        <div class="col-md-3">
+                                            <div class="text-center">
+                                                <img src="" id="avatar" class="avatar img-circle" alt="avatar" />
+                                                <h6>Upload a different photo...</h6>
+                                                <div class="upload-btn">
+                                                    <input id="userImgFile" type="file" name="UserImageUpload" class="form-control" />
+                                                    <i class="fa fa-upload faUpload" aria-hidden="true"><span> Change Avatar</span></i> 
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">Username:</label>
+                                                <div class="col-lg-8">
+                                                    <p class="form-control" style="user-select:none;background:#eeeeef;" id="userName"></p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">Email:</label>
+                                                <div class="col-lg-8">
+                                                    <p class="form-control" style="user-select:none;background:#eeeeef;" id="Email"></p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">Name:</label>
+                                                <div class="col-lg-8">
+                                                    <input class="form-control" name="FullName" id="fullName" type="text" value="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">Company:</label>
+                                                <div class="col-lg-8">
+                                                    <input class="form-control" id="ComName" type="text" value="Galleria Super Market">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label"></label>
+                                                <div class="col-md-8">
+                                                    <input type="submit" id="ProfileSubmit" class="btn btn-primary" value="Save Changes">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.tab-pane -->
+                        <div class="tab-pane" id="tab_2">
+                            <div class="row">
+                                <form>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Old Password:</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" type="password" value="11111122333">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Password:</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" type="password" value="11111122333">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Confirm password:</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" type="password" value="11111122333">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label"></label>
+                                        <div class="col-md-8">
+                                            <input type="button" class="btn btn-primary" value="Save Changes">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                        </div>
+                        <!-- /.tab-pane -->
+                    </div>
+                    <!-- /.tab-content -->
+                </div>
+                <!-- nav-tabs-custom -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div>
+</section>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $('#userImgFile').on('change', BindImage);
+            //$('#ProfileSubmit').on('click', ChangeProfileInfo);
+
+        });
+
+        function BindImage(e) {
+            var file = e.originalEvent.target.files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function (evt) {
+                $('#avatar').attr('src', '');
+                $('#avatar').attr('src', evt.target.result);
+            };
+        }
+
+        //function ChangeProfileInfo() {
+        //    debugger;
+        //    var name = $('#fullName').val();
+        //    var image=$('#avatar').attr('src');
+        //    $.ajax({
+        //        url: '/Account/UserProfile',
+        //        type: 'POST',
+        //        dataType: 'json',
+        //        data: { userInfo: JSON.stringify({Fullname:name})},
+        //        success: function (res) {
+        //            alert(res);
+        //        }
+        //    })
+        //}
+        
+    </script>
+}

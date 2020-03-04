@@ -1,0 +1,181 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Role Management
+        <small>Control panel</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Role</a></li>
+        <li class="active">Index</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4>Create a new role</h4>
+                </div><!--End Panel heading-->
+                <div class="panel-body">
+                    <div>
+                        Role Name : <input type="text" id="RoleName" class="form-control"/>
+                        <input type="button" value="Save" id="SaveRole" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div><!--End First Panel-->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4>Role List</h4>
+                </div><!--End Panel Heading-->
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered table-hover col-sm-6 col-lg-6 col-md-6">
+                        @foreach (var role in ViewBag.Roles)
+                        {
+                            <tr>
+                                <td class="col-sm-1 col-lg-9 col-md-8">
+                                    <strong>@role.Text</strong>
+                                </td>
+                                <td>
+                                    <div class="hidden-sm hidden-xs action-buttons">
+                                        <a class="blue" href="#">
+                                            <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                        </a>
+
+                                        <a class="green" href="@Url.Action("Edit", "Edit", new { RoleName = role.Text})">
+                                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                        </a>
+
+                                        <a id="id-btn-dialog2" class="red" href="/Role/Delete?RoleName=@role.Text">
+                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                        </a>
+
+                                        <div id="dialog-confirm" class="hide">
+                                            <div class="alert alert-info bigger-110">
+                                                These items will be permanently deleted and cannot be recovered.
+                                            </div>
+
+                                            <div class="space-6"></div>
+
+                                            <p class="bigger-110 bolder center grey">
+                                                <i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>
+                                                Are you sure?
+                                            </p>
+                                        </div><!-- #dialog-confirm -->
+
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div><!--End Panel Body-->
+            </div><!--End Second Panel-->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4>Add Roles to a User</h4>
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("RoleAddToUser", "Role"))
+                    {
+                        @Html.AntiForgeryToken();
+                        @Html.ValidationSummary(true);
+
+                        <p>User Name : @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewBag.Users, "--- Select Username ---", new { @class="form-control"})</p>
+                        <p>Role Name : @Html.DropDownList("RoleName", (IEnumerable<SelectListItem>)ViewBag.Roles, "--- Select Role ---", new { @class = "form-control" })</p>
+                        <p>Outlet : @Html.DropDownList("OutletID", (IEnumerable<SelectListItem>)ViewBag.OutletID, "--- Select Outlet ---", new { @class = "form-control" })</p>
+                        <p><input type="submit" value="Role Assign" class="btn btn-primary" /></p>
+                    }
+                </div>
+            </div> <!--End of role Add to User Panel-->
+        </div><!--Left Box-->
+        <div class="col-md-6 col-sm-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4>Role List for a user</h4>
+                </div><!--End of panel heading-->
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="control-label"> User Name :</label> 
+                        <select id="userName" class="form-control">
+                            <option>--- Select User ---</option>
+                        </select>
+                        <input type="submit" value="Get Roles for this user" class="btn btn-primary" />
+                    </div>
+
+                </div><!--End of Panel body-->
+            </div> <!--End of role List Panel-->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4>Remove user From Roles</h4>
+                </div><!--End panel heading-->
+                <div class="panel-body">
+                    @using (Html.BeginForm("DeleteRoleForUser", "Role"))
+                    {
+                        @Html.AntiForgeryToken();
+                        @Html.ValidationSummary(true);
+
+                        <p>
+                            User Name : @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewBag.Users, "--- Select Username ---", new { @class = "form-control" })
+                        </p>
+                        <p>
+                            Role Name : @Html.DropDownList("RoleName", (IEnumerable<SelectListItem>)ViewBag.Roles, "--- Select Role ---", new { @class = "form-control" })
+                        </p>
+                        <p><input type="submit" value="Remove Role" class="btn btn-primary" /></p>
+                    }
+                </div><!--End Panel body-->
+            </div> <!--End of role From the user panel-->
+        </div><!--Right Box-->
+    </div>
+</section>
+
+<div class="alert-info col-sm-12 col-lg-12 col-md-12">
+    @ViewBag.Message
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            $.ajax({
+                url: '/Role/GetUserList',
+                type:'GET',
+                dataType:'json',
+                success: function (res) {
+                    var html;
+                    if (res.length > 0) {
+                        var common = { id: '', name: "--- Select User ---" };
+                        res.splice(0, 0, common);
+                        $.each(res, function (index, row) {
+                            html = '<option value="' + row.id + '">' + row.name + '</option>';
+                            $('#userName').append(html);
+                        });
+                        
+                    } else {
+                        html = '<option> No Data Available </option>';
+                        $('#userName').append(html);
+                    }
+                    
+                }
+            });
+
+            $('#SaveRole').click(function (e) {
+                e.preventDefault();
+                var roleName = $('#RoleName').val();
+                $.ajax({
+                    url:'/Role/Create',
+                    type:'POST',
+                    data: { RoleName : roleName},
+                    dataType:'json',
+                    success: function (res) {
+                        alert(res);
+                    }
+                })
+            });
+        });
+    </script>
+}

@@ -1,0 +1,103 @@
+﻿
+@using ReportViewerForMvc;
+@{
+    ViewBag.Title = "ReportProduct";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+<style>
+    .report-box iframe ::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .report-box > iframe #ReportViewer1_fixedTable {
+        margin: 0 auto !important;
+        border: 1px solid #dedede;
+    }
+</style>
+
+<section class="content-header">
+    <h1>
+        All Product
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Report</a></li>
+        <li><a href="#">All Product</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="filter-report">
+        <ul class="filter-list">
+            <li>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <select id="CategoryID" name="CategoryID" class="form-control">
+                            <option>--Select Category</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="button" id="GetReport" class="btn btn-primary" value="Get Report" />
+                    </div>
+                </div>
+            </li>
+            <li>
+                From
+            </li>
+            <li>
+                <div class="form-group">
+                    <input type="date" id="formDate" class="form-control"/>
+                </div>
+            </li>
+            <li>
+                TO
+            </li>
+            <li>
+                <div class="form-group">
+                    <input type="date" id="toDate" class="form-control" />
+                </div>
+            </li>
+            <li>
+                <div class="col-md-2">
+                    <input type="button" id="DaterangeReport" class="btn btn-primary" value="Get Report" />
+                </div>
+            </li>
+        </ul>
+    </div>   
+
+    <div class="report-box">
+        <div class="report-frame">
+            @Html.ReportViewer(ViewBag.ReportViewer as Microsoft.Reporting.WebForms.ReportViewer)
+        </div>        
+    </div>
+    
+</section>
+
+    @section scripts{
+        <script>
+            $(document).ready(function () {
+                $('#GetReport').click(function () {
+                    var cid = parseInt($('#CategoryID').val());
+                    window.location.href = '/ReportRdlc/GetCategoryWiseProduct?catId=' + cid + '';
+                });
+
+                $('#DaterangeReport').click(function () {
+                    var fDate = $('#formDate').val();
+                    var tDate = $('#toDate').val();
+                    window.location.href = '/ReportRdlc/LocalSaleDaterange?fromDate=' + fDate + '&toDate='+tDate+'';
+                });
+
+                $.ajax({
+                    url: '/Home/GetCategories',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (res) {
+                        var html;
+                        $.each(res, function (index, row) {
+                            html = '<option value="' + row.id + '">' + row.name + '</option>';
+                            $('#CategoryID').append(html);
+                        });
+                    }
+                })
+            });
+        </script>
+    }

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<GalleriaSupermarket.Models.Supplier>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        Supplier
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Supplier</a></li>
+        <li><a href="#">Index</a></li>
+    </ol>
+</section>
+<section class="content">
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table id="ItemShow" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CompanyName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OfficeAddress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ContactNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Owner)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OfficeAddress)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ContactNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Owner)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.SupplierID }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.SupplierID }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.SupplierID })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</section>
+@section scripts
+{
+    <script>
+  $(function () {
+    $('#ItemShow').DataTable()
+  })
+    </script>
+}

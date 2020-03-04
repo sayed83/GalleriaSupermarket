@@ -1,0 +1,318 @@
+﻿
+@{
+    ViewBag.Title = "AuthenticationForCheckout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="step-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div id="tran-alert" style="display:none" class="alert alert-danger">
+                    <strong>Danger!</strong> Transaction Number Invalid.
+                </div>
+                <div class="step-box">
+                    <div id="payment-step">
+                        <ul class="step-list">
+                            <li class="active"><i class="fa fa-sign-in" aria-hidden="true"></i> Sign in</li>
+                            <li><i class="fa fa-map" aria-hidden="true"></i> Delivery Address</li>
+                            <li><i class="fa fa-paypal" aria-hidden="true"></i> Payment</li>
+                        </ul>
+
+                        <div class="step-wrapper-box">
+                            <div id="cartStep-one" class="cartStep cartStep-one active">
+                                @if (Request.IsAuthenticated)
+                                {
+                                    <p>You are Sign in as <strong>( @HttpContext.Current.User.Identity.Name )</strong></p>
+                                }
+                                else
+                                {
+                                    <div class="login-box">
+                                        <div class="form-group">
+                                            <input id="loginUser" type="text" class="form-control step-control" placeholder="Username" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input id="loginPass" type="password" class="form-control step-control" placeholder="*****" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="button" id="logSubmit" class="btn btn-primary btn-cartSign" value="Login and Continue" />
+                                        </div>
+                                        <div style="display:none;" class="step-loading">
+                                            <img src="~/Assets/ajax-loader.gif" />
+                                        </div>
+                                        <div id="showError" style="display:none">
+                                            <p class="text-danger">Username or Password Invalid!</p>
+                                        </div>
+                                        <div id="showSucc" style="display:none">
+                                            <p class="text-success">Login Success!</p>
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+                            <!--Step one End-->
+                            <div id="cartStep-two" class="cartStep cartStep-two inactive">
+                                <div class="address_form_agile">
+                                    <h4>Add a new Details</h4>
+                                    <div class="ck-address">
+                                        <div class="input-group">
+                                            <div class="col-md-4">
+                                                <input type="text" id="fullName" placeholder="Fullname" class="form-control addr-input" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="contactNumber" placeholder="Contact Number" class="form-control addr-input" required />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <select id="getCity" class="form-control addr-input">
+                                                    <option value="0">--- Select City ---</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="input-group">
+                                            <div class="col-md-12">
+                                                <input type="text" id="getAddr" placeholder="Address eg. 126/A, Dewanbazar, Chittagong." class="form-control addr-input" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="checkout-right-basket">
+                                        <a href="javascript:void(0)" id="cartPmnt">
+                                            Make a Payment
+                                            <span class="fa fa-hand-o-right" aria-hidden="true"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Step two End-->
+                            <div id="cartStep-three" class="cartStep cartStep-three inactive">
+                                <div class="payment-box">
+                                    <ul class="payment-option">
+                                        <li><a id="cod-option" href="javascript:void(0)">Cash on Delivery</a></li>
+                                        <li><a id="onpmnt-option" href="javascript:void(0)">Online Payment</a></li>
+                                    </ul>
+                                    <div class="payment-ins">
+                                        <div class="ins-box cod-box col-md-6">
+                                            <img id="cod-img" class="img-responsive" src="~/Assets/img/no-upfront-payment.png" />
+                                            <div style="display:none;" id="cod-payment" class="cod-payment">
+                                                <h4>Transaction Details</h4>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon"><i class="fa fa-mobile"></i></div>
+                                                        <input type="text" class="form-control bNumber" id="bNumber" placeholder="Bkash Number">
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon"><i class="fa fa-qrcode"></i></div>
+                                                        <input type="text" class="form-control tranNo" id="tranNo" placeholder="Transaction Number">
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon"><i class="fa fa-gift"></i></div>
+                                                        <input type="button" data-pmnt="cod" data-method="bKash" class="btn btn-primary pmnt-btn" id="paymentSubmit" value="Place Order">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ins-box on-box col-md-6">
+                                            <img id="on-img" class="img-responsive" src="~/Assets/img/paywith_mobile.png" />
+                                            <div style="display:none;" id="pmnt-more" class="pmnt-more">
+                                                <h4>Choose Option</h4>
+                                                <ul class="moreOpt-list">
+                                                    <li>
+                                                        <a id="more-bks" href="javascript:void(0)">
+                                                            <img src="~/Assets/img/bkash-logo.jpg" />
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a id="more-rckt" href="javascript:void(0)">
+                                                            <img src="~/Assets/img/rocket-logo.jpg" />
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div style="display:none;" id="on-payment" class="cod-payment">
+                                                <h4>Transaction Details</h4>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon"><i class="fa fa-mobile"></i></div>
+                                                        <input type="text" class="form-control bNumber" id="onbNumber" placeholder="Payee Number">
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon"><i class="fa fa-qrcode"></i></div>
+                                                        <input type="text" class="form-control tranNo" id="onTranNo" placeholder="Transaction Number">
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon"><i class="fa fa-gift"></i></div>
+                                                        <input type="button" class="btn btn-primary pmnt-btn" id="paymentSubmit" value="Place Order">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="summary-box">
+                    <h2>Order Summary</h2>
+                    <table id="orderSum" class="table table-striped">
+                        <tbody></tbody>
+                    </table>
+                    <table class="table-footer">
+                        <tr>
+                            <td colspan="2">Sub Total</td>
+                            <td id="sumTotal"></td>
+                        </tr>
+                        <tr style="background:#d60000">
+                            <td colspan="2">30% Payment <span class="cod">(Cash on Delivery)</span></td>
+                            <td id="perPayment" align="right"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('.step-list>li').on('click', function () {
+                var $this = $(this);
+                if (!$this.hasClass('active')) {
+                    $this.prev().addClass('complete').removeClass('active');
+                    $this.addClass('active');
+                }
+            });
+
+            $.ajax({
+                url: '/Home/UserAuthenticate',
+                type: 'GET',
+                dataType: 'json',
+                success: function (res) {
+                    if (res === true) {
+                        $('.step-list>li:nth-child(2)').trigger('click');
+                        var ckaddr = JSON.parse(sessionStorage.getItem('Address'));
+                        if (ckaddr[0].phone !='' && ckaddr[0].city != 0) {
+                            $('.step-list>li:nth-child(2)').trigger('click');
+                            $('.step-list>li:last-child').trigger('click');
+                        } else {
+                            $('.step-list>li:nth-child(2)').trigger('click');    
+                        }
+                                            
+                    }
+                }
+            });
+
+            $('.step-list>li:first-child').click(function () {
+                $('#cartStep-one').show();
+                $('#cartStep-two').hide();
+                $('#cartStep-three').hide();
+            });
+
+            $('.step-list>li:nth-child(2)').click(function () {
+                $('#cartStep-one').hide();
+                $('#cartStep-two').show();
+                $('#cartStep-three').hide();
+            });
+
+            $('.step-list>li:last-child').click(function () {
+                $('#cartStep-one').hide();
+                $('#cartStep-two').hide();
+                $('#cartStep-three').show();
+            });
+
+            $.ajax({
+                url: '/Home/GetCity',
+                type: 'GET',
+                dataType: 'json',
+                success: function (res) {
+                    var html;
+                    $.each(res, function (index, row) {
+                        html = '<option value="' + row.id + '">' + row.name + '</option>';
+                        $('#getCity').append(html);
+                    });
+                }
+            });
+
+            $('#cartPmnt').click(function () {
+                var Address = [];
+                var name = $('#fullName').val();
+                var phone = $('#contactNumber').val();
+                var addr = $('#getAddr').val();
+                var city = parseInt($('#getCity').val());
+                var addrObj = { name, phone, city, addr };
+                if (phone != '' && city != '') {
+                    Address.push(addrObj);
+                    sessionStorage.setItem("Address", JSON.stringify(Address));
+                    $('.step-list>li:last-child').trigger('click');
+                } else {
+                    $('#contactNumber').css('border', '1px solid red');
+                    $('#getCity').css('border', '1px solid red');
+                }
+                
+            });
+
+            if (JSON.parse(sessionStorage.getItem('Address')) != null) {
+                bindAddress();
+            }
+
+            $('#logSubmit').click(function () {
+                var loginUser = $('#loginUser').val();
+                var loginPass = $('#loginPass').val();
+                userValid(loginUser, loginPass);
+            });
+
+            function userValid(user, uPass) {
+                $('.step-loading').show();
+                $.ajax({
+                    url: '/Home/CheckUserAccount',
+                    type:'POST',
+                    data: { userName: user, pass: uPass },
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res == true) {
+                            setTimeout(function () {
+                                $('.step-loading').hide();
+                                $('#showSucc').show();
+                                //$('.step-list>li:nth-child(2)').trigger('click');
+                            }, 1000);
+                            setTimeout(function () {
+                                location.reload(true);
+                            },2000);
+                        } else {
+                            setTimeout(function () {
+                                $('.step-loading').hide();
+                                $('#showError').show();
+                                alert(location);
+                            }, 1000);                           
+                        }
+                    }
+                });
+            }
+            
+            function bindAddress() {
+                var addrObj = JSON.parse(sessionStorage.getItem('Address'));
+                if (addrObj.length > 0 || addrObj != null) {
+                    $('#fullName').val(addrObj[0].name);
+                    $('#contactNumber').val(addrObj[0].phone);
+                    $('#getAddr').val(addrObj[0].addr);
+                    var cityID = parseInt(addrObj[0].city);
+                    setTimeout(function () {
+                        $('#getCity').val(cityID).trigger('change');
+                    }, 1000);
+                }
+            };
+            CalculatePercentage();
+            function CalculatePercentage() {
+                var percent = 0.3, totalAmount;
+                var totalPrice = $('#sumTotal').text();
+                totalPrice = parseFloat(totalPrice.replace('$', 0));
+                totalAmount = Math.ceil(Number(totalPrice * percent));
+                $('#perPayment').text('$' + totalAmount);
+            };
+            
+        });
+    </script>
+}

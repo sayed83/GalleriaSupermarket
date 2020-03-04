@@ -1,0 +1,205 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="" class="avatar img-circle" alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    <p>@User.Identity.GetUserName()</p>
+                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                </div>
+            </div>
+            <!-- search form -->
+            <form action="#" method="get" class="sidebar-form">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search...">
+                    <span class="input-group-btn">
+                        <button type="submit" name="search" id="search-btn" class="btn btn-flat">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </form>
+            <!-- /.search form -->
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="header">MAIN NAVIGATION</li>
+                <li class="active">
+                    <a href="@Url.Action("Index","GsmAdmin")">
+                        <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                    </a>
+                </li>
+                <!--Administration Menu Start-->
+                @if (HttpContext.Current.User.IsInRole("Admin"))
+                {
+                    <li class="">
+                        <a href="@Url.Action("Create", "InternalSale")">
+                            <i class="fa fa-calculator"></i> <span>POS</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="@Url.Action("Index", "ItemTransfer")">
+                            <i class="fa fa-gift"></i> <span>Product In <span class="countRequest"></span></span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-users"></i>
+                            <span>Staff &amp; Management</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index","Role")"><i class="fa fa-circle-o"></i>List Role</a></li>
+                            <li><a href="#"><i class="fa fa-circle-o"></i>System User</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-bars"></i>
+                            <span>Products</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index","Category")"><i class="fa fa-circle-o"></i>Category</a></li>
+                            <li><a href="@Url.Action("Index","SubCategory")"><i class="fa fa-circle-o"></i> SubCategory</a></li>
+                            <li><a href="@Url.Action("Index","Product")"><i class="fa fa-circle-o"></i> Add Product</a></li>
+                            <li><a href="@Url.Action("Index","Item")"><i class="fa fa-circle-o"></i> Make Item</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="">
+                        <a href="@Url.Action("Create", "ItemTransfer")">
+                            <i class="fa fa-send"></i> <span>Item Transfer</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-cart-plus"></i>
+                            <span>Purchase</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index","Purchase")"><i class="fa fa-circle-o"></i>Purchase List</a></li>
+                            <li><a href="@Url.Action("Create","Purchase")"><i class="fa fa-circle-o"></i>Purchase</a></li>
+                            <li><a href="@Url.Action("SupplierPayment","Purchase")"><i class="fa fa-circle-o"></i>Supplier Payment</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-balance-scale"></i>
+                            <span>Sale</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index","OnlineSale")"><i class="fa fa-circle-o"></i>Online Sale</a></li>
+                            <li><a href="@Url.Action("Index","InternalSale")"><i class="fa fa-circle-o"></i> Outlet Sale</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-user-secret"></i>
+                            <span>Vendor &amp; Customer</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("Index","Supplier")"><i class="fa fa-circle-o"></i>Suppliers</a></li>
+                            <li><a href="@Url.Action("GetCustomer","Home")"><i class="fa fa-circle-o"></i> Customers</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-file-pdf-o"></i>
+                            <span>Reports</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("SalesReport","Report")"><i class="fa fa-circle-o"></i>Sales Info</a></li>
+                            <li><a href="@Url.Action("ReportProduct","ReportRdlc")"><i class="fa fa-circle-o"></i>All Product</a></li>
+                        </ul>
+                    </li>
+                }
+
+                <!--Manager menu-->
+                @if (HttpContext.Current.User.IsInRole("Manager"))
+                {
+                    <li class="">
+                        <a href="@Url.Action("Create", "InternalSale")">
+                            <i class="fa fa-calculator"></i> <span>POS</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="@Url.Action("Index", "ItemTransfer")">
+                            <i class="fa fa-gift"></i> <span>Product In <span class="countRequest"></span></span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-university"></i>
+                            <span>Manage Outlet</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a id="outletPro" href="@Url.Action("OutletItem", "Item")"><i class="fa fa-circle-o"></i>Outlet Products</a></li>
+                            <li><a href="@Url.Action("Create","ItemTransfer")"><i class="fa fa-circle-o"></i>Transfer Products</a></li>
+                            <li><a href="@Url.Action("ProductRequest","Item")"><i class="fa fa-circle-o"></i> Request Product</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-database"></i>
+                            <span>Sales History</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a id="outletPro" href="@Url.Action("Index", "InternalSale")"><i class="fa fa-circle-o"></i>Outlet Sales</a></li>
+                            <li><a href="#"><i class="fa fa-circle-o"></i>Sales Returns</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-university"></i>
+                            <span>Expenses</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a id="expID" href="@Url.Action("GetOutletExpense", "Expense")"><i class="fa fa-circle-o"></i>Operation Expenses</a></li>
+                            <li><a href="#"><i class="fa fa-circle-o"></i>Other Outlet Products</a></li>
+                            <li><a href="#"><i class="fa fa-circle-o"></i> Request Product</a></li>
+                        </ul>
+                    </li>
+                }
+
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+}
+else
+{
+    Response.Redirect("~/Account/Login");
+}

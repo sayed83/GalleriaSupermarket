@@ -1,0 +1,99 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <li class="dropdown notifications-menu">
+                    <a href="#" class="dropdown-toggle noti" data-toggle="dropdown">
+                        <i class="fa fa-bell-o"></i>
+                        <span class="label label-danger not-count"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="header" id="header-count"></li>
+                        <li>
+                            <!-- inner menu: contains the actual data -->
+                            <ul id="notiContent" class="menu"></ul>
+                        </li>
+                        <li class="footer"><a href="#">View all</a></li>
+                    </ul>
+                </li>
+                @if (HttpContext.Current.User.IsInRole("Admin"))
+                {
+                    <li class="dropdown request-menu">
+                        <a href="#" class="dropdown-toggle req-noti" data-toggle="dropdown">
+                            <i class="fa fa-flag-o"></i>
+                            <span class="label label-danger req-count"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="header" id="reqheader-count"></li>
+                            <li>
+                                <!-- inner menu: contains the actual data -->
+                                <ul id="notiReq" class="menu"></ul>
+                            </li>
+                            <li class="footer"><a href="#">View all Request</a></li>
+                        </ul>
+                    </li>
+                }
+               
+                <!-- User Account: style can be found in dropdown.less -->
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="" class="avatar user-image" alt="User Image">
+                        <span class="hidden-xs">@User.Identity.GetUserName()</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <!-- User image -->
+                        <li class="user-header">
+                            <img src="" class="avatar img-circle" alt="User Image">
+                            <p>
+                                @User.Identity.GetUserName() - <span id="Role"></span>
+                                <small>Member since Nov. 2012</small>
+                            </p>
+                        </li>
+                        <!-- Menu Body -->
+                        <li class="user-body">
+                            <div class="row">
+                                <div class="col-xs-4 text-center">
+                                    <a href="#">Followers</a>
+                                </div>
+                                <div class="col-xs-4 text-center">
+                                    <a href="#">Sales</a>
+                                </div>
+                                <div class="col-xs-4 text-center">
+                                    <a href="#">Friends</a>
+                                </div>
+                            </div>
+                            <!-- /.row -->
+                        </li>
+                        <!-- Menu Footer-->
+                        <li class="user-footer">
+                            <div class="pull-left">
+                                <a href="@Url.Action("UserProfile","Account")" class="btn btn-default btn-flat">Profile</a>
+                            </div>
+                            <div class="pull-right">
+                                <a class="btn btn-default btn-flat" href="javascript:document.getElementById('logoutForm').submit()">Sign out</a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Control Sidebar Toggle Button -->
+                <li>
+                    <a href="@Url.Action("Index","Role")"><i class="fa fa-gears"></i></a>
+                </li>
+            </ul>
+        </div>
+    }
+}
+else
+{
+    <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+            <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        </ul>
+    </div>
+}

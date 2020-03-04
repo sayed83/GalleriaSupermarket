@@ -1,0 +1,89 @@
+﻿@model GalleriaSupermarket.Models.ItemTransfer
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>ItemTransfer</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Item.ItemID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Item.ItemID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Outlet.OutletName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Outlet.OutletName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ItemFrom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemFrom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AdminApproved)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AdminApproved)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ManagerApproved)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ManagerApproved)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TransQnty)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TransQnty)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsDeleted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsDeleted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TransferDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TransferDate)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

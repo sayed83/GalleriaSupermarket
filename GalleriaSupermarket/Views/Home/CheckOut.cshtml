@@ -1,0 +1,65 @@
+﻿@{
+    ViewBag.Title = "CheckOut";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- checkout page -->
+<div class="privacy">
+    <div class="container">
+        <!-- tittle heading -->
+        <h3 class="tittle-w3l">
+            Checkout
+            <span class="heading-style">
+                <i></i>
+                <i></i>
+                <i></i>
+            </span>
+        </h3>
+        <!-- //tittle heading -->
+        
+        <div class="cart-content-box">
+            <!-- Tab panes -->
+            <div class="tab-content cart-content">
+                <div role="tabpanel" class="tab-pane active" id="ckout">
+
+                    <div class="checkout-right">
+                        <h4>
+                            Your shopping cart contains:
+                            <span id="ckProduct"></span>
+                        </h4>
+                        <div class="table-responsive">
+                            <table id="checkoutTable" class="timetable_sub">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fa fa-trash-o"></i></th>
+                                        <th>Product</th>
+                                        <th>Name</th>
+                                        <th>Size</th>
+                                        <th>Price</th>
+                                        <th></th>
+                                        <th>Qnty</th>
+                                        <th></th>
+                                        <th>Item Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <div class="checkout-footer">
+                                <ul class="total-List">
+                                    <li>Total</li>
+                                    <li><span id="grossTotal">$0.00</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="checkout-right-basket" role="presentation">
+                            <a href="@Url.Action("AuthenticationForCheckout","Home")" id="contBtn">
+                                Proceed to checkout
+                                <span class="fa fa-hand-o-right" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

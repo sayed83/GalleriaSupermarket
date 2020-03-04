@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    <li>
+        <a href="@Url.Action("Index","MyAccount")">
+            <span class="fa fa-unlock-alt" aria-hidden="true"></span> My Account
+        </a>
+    </li>
+    <li>
+        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <a href="javascript:document.getElementById('logoutForm').submit()">
+                <span class="fa fa-sign-out" aria-hidden="true"></span> Sign Out
+            </a>
+        }
+    </li>
+}
+else
+{
+    <li>
+        <a href="@Url.Action("Login","Account")">
+            <span class="fa fa-unlock-alt" aria-hidden="true"></span> Sign In
+        </a>
+    </li>
+    <li>
+        <a href="@Url.Action("Register","Account")">
+            <span class="fa fa-pencil-square-o" aria-hidden="true"></span> Sign Up
+        </a>
+    </li>
+}
+

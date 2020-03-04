@@ -1,0 +1,80 @@
+﻿@model IEnumerable<GalleriaSupermarket.Models.OperationCostDetail>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        Cost Details
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Operation Cost</a></li>
+        <li><a href="#">Index</a></li>
+    </ol>
+</section>
+<section class="content">
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table id="ItemShow" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Expense.Month)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CostHead)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CostAmount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AddedBy)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CostDate)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Expense.Month)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CostHead)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CostAmount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AddedBy)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CostDate)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.OperationCostDetailID }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.OperationCostDetailID }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.OperationCostDetailID })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </section>
+@section scripts
+{
+    <script>
+        $(function () {
+            $('#ItemShow').DataTable();
+        });
+    </script>
+ }

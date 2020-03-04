@@ -1,0 +1,76 @@
+﻿@model IEnumerable <GalleriaSupermarket.Models.ViewModel.CustomerOrderVM>
+@{
+    ViewBag.Title = "MyOrder";
+    Layout = "~/Views/Shared/_CustomerLayoutPage.cshtml";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Order History
+        <small>Control panel</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Hisory</a></li>
+        <li class="active">My Order</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <table id="ItemShow" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Order #
+                </th>
+                <th>
+                    Order Date
+                </th>
+                <th>
+                   Status
+                </th>
+                <th>OrderTotal</th>
+                <th class="nosort"></th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.InvoiceNumber</td>
+                    <td>@item.OrderDate</td>
+                    <td>
+                        @if(item.IsPaid == true)
+                        {
+                            <span class="text-success">Complete</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">Pending</span>
+                        }
+                    </td>
+                    <td>$@item.ItemPrice</td>
+                    <td><a href="javascript:void(0)" class="btn btn-primary view-more">view</a></td>
+                </tr>
+            }
+            
+        </tbody>
+    </table>
+
+
+</section>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {           
+            $("#ItemShow").dataTable({
+                "aoColumnDefs": [{
+                    'bSortable': false,
+                    'aTargets': ['nosort']
+                }]
+            });
+    });
+</script>
+
+}

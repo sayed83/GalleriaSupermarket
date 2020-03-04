@@ -1,0 +1,69 @@
+﻿@model IEnumerable<GalleriaSupermarket.Models.SubCategory>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        Sub Category
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Subcategory</a></li>
+        <li><a href="#">Index</a></li>
+    </ol>
+</section>
+<section class="content">
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table id="ItemShow" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Category.CategoryName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SubCategoryName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsDeleted)
+                </th>
+                <th></th>
+
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SubCategoryName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsDeleted)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.SubCategoryID }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.SubCategoryID }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.SubCategoryID })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</section>
+@section scripts
+{
+    <script>
+  $(function () {
+    $('#ItemShow').DataTable()
+  })
+    </script>
+}

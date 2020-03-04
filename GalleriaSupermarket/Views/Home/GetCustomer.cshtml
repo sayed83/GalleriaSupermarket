@@ -1,0 +1,58 @@
+﻿@model IEnumerable<GalleriaSupermarket.Models.ViewModel.CustomerVM>
+@{
+                /**/
+
+                ViewBag.Title = "GetCustomer";
+                Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+<section class="content-header">
+    <h1>
+        Customers
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Sales Report</a></li>
+        <li><a href="#">Index</a></li>
+    </ol>
+</section>
+<section class="content">
+    <table id="ItemShow" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Avatar</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Username</th>
+                <th class="nosort"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img class="cust-image" src="/App_File/Staff_Img/@item.ImageUrl" />
+                    </td>
+                    <td>@item.FullName</td>
+                    <td>@item.Email</td>
+                    <td>@item.UserName</td>
+                    <td>
+                        <a href="#" class="btn btn-primary">Show Orders</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
+@section scripts{
+    <script>
+        $(document).ready(function(){
+            $('#ItemShow').DataTable({
+                'aoColumnDefs': [{
+                    'bSortable': false,
+                    'aTargets':['nosort']
+                }]
+            });
+        })
+    </script>
+}

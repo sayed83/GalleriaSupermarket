@@ -1,0 +1,68 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <!-- User Account: style can be found in dropdown.less -->
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="" class="avatar user-image" alt="User Image">
+                        <span class="hidden-xs">@User.Identity.GetUserName()</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <!-- User image -->
+                        <li class="user-header">
+                            <img src="" class="avatar img-circle" alt="User Image">
+                            <p>
+                                @User.Identity.GetUserName() - <span id="Role"></span>
+                                <small>Member since Nov. 2012</small>
+                            </p>
+                        </li>
+                        <!-- Menu Body -->
+                        <li class="user-body">
+                            <div class="row">
+                                <div class="col-xs-4 text-center">
+                                    <a href="#">Followers</a>
+                                </div>
+                                <div class="col-xs-4 text-center">
+                                    <a href="#">Sales</a>
+                                </div>
+                                <div class="col-xs-4 text-center">
+                                    <a href="#">Friends</a>
+                                </div>
+                            </div>
+                            <!-- /.row -->
+                        </li>
+                        <!-- Menu Footer-->
+                        <li class="user-footer">
+                            <div class="pull-left">
+                                <a href="@Url.Action("UserProfile","MyAccount")" class="btn btn-default btn-flat">Profile</a>
+                            </div>
+                            <div class="pull-right">
+                                <a class="btn btn-default btn-flat" href="javascript:document.getElementById('logoutForm').submit()">Sign out</a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Control Sidebar Toggle Button -->
+                <li>
+                    <a href="#"><i class="fa fa-gears"></i></a>
+                </li>
+            </ul>
+        </div>
+    }
+}
+else
+{
+    <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+            <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        </ul>
+    </div>
+}
+

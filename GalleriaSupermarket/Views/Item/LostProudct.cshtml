@@ -1,0 +1,149 @@
+﻿
+@{
+    ViewBag.Title = "LostProudct";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+<link href="~/Content/themes/base/autocomplete.css" rel="stylesheet" />
+<section class="content-header">
+    <h1>
+        Lost Product
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Item</a></li>
+        <li><a href="#">Lost Product</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="col-md-8">
+        <table id="ItemShow" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Added By</th>
+                    <th>Added Date</th>
+                    <th class="nosort"></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <div class="lostproduct-add">
+            <h2>Add Lost Product</h2>
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label class="control-label">Product Name</label>
+                    <input placeholder="Type Product Name" type="text" class="form-control" id="ProName" />
+                    <input type="hidden" id="ItemID" required/>
+                </div>                
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    <input type="text" placeholder="Qnty" class="form-control" id="LostQnty" required />
+                </div>
+                <div class="col-md-6">
+                    <input class="btn btn-primary lostbtn" id="saveBtn" value="Add" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="display:none" class="lloading"><img src="~/Assets/ajax-loader.gif" /></div>
+                <span style="display:none" class="lstatus text-success">Saved Successfully</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts
+{
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#ItemShow').DataTable({
+                'aoColumnDefs': [{
+                    'bSortable': false,
+                    'aTargets':['nosort']
+                }]
+            });
+            
+            //save lost product
+            $('#saveBtn').click(function () {
+                var litemid = parseInt($('#ItemID').val());
+                var lqnty = parseInt($('#LostQnty').val());
+                $('.lloading').show();
+                $.ajax({
+                    url: '/Item/SaveLostProduct',
+                    type: 'POST',
+                    data: { itemId: litemid, qnty: lqnty },
+                    dataType: 'json',
+                    success: function (res) {
+                        $('#ItemID').val(' ');
+                        $('#LostQnty').val(' ');
+                        $('#ProName').val(' ');
+                        setTimeout(function () {
+                            GetLostProductData();
+                            $('.lloading').hide();
+                            $('.lstatus').show();
+                        }, 1000);
+
+                    }
+                });
+            });
+
+            $('#ProName').autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/Item/AutoCompleteLostItem',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: { name: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return {
+                                    label: item.name, value: item.name, hidden: item.id
+                                }
+                            }))
+                        },
+                        messages: {
+                            noResults: "", results: ""
+                        }
+                    });
+                }
+            }).data("ui-autocomplete")._renderItem = function (ul, item) {
+                return $("<li></li>")
+                    .data("item.autocomplete", item)
+                    .append("<a href='javascript:void(0)' class='itemId'  data-id='" + item.hidden + "'>" + item.label + "</a>")
+                    .appendTo(ul);
+            };
+
+            $(document).on('click', '.itemId', function () {
+                var id = parseInt($(this).attr('data-id'));
+                $('#ItemID').val(id);
+            });
+
+            GetLostProductData();
+
+            function GetLostProductData() {
+                $.getJSON("/Item/GetLostProuduct", function (res) {
+                    var html;
+                    $('#ItemShow tbody').empty();
+                    if (res.length > 0) {
+                        $.each(res, function (i, row) {
+                            html = '<tr><td>' + row.name + '</td><td>' + row.qnty + '</td><td>' + row.username + '</td><td>' + row.date + '</td><td><a href="javascript:void(0)">Remove</a></td></tr>';
+                            $('#ItemShow tbody').append(html);
+                        });
+                    } else {
+                        html = '<tr><td align="center" colspan="5">No Lost Product Available</td></tr>';
+                        $('#ItemShow tbody').append(html);
+                    }
+                    
+                });
+            };
+          
+
+        });
+    </script>
+}

@@ -1,0 +1,114 @@
+﻿@model IEnumerable<GalleriaSupermarket.Models.Expense>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<section class="content-header">
+    <h1>
+        Expense
+        <small>it all starts here</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Expenses</a></li>
+        <li><a href="#">Index</a></li>
+    </ol>
+</section>
+<section class="content">
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table id="ItemShow" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Outlet
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ElectricityBill)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OutletOperationCost)
+                </th>
+                <th>
+                   Staff Salary
+                </th>
+                <th>
+                    Others
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Month)
+                </th>
+                <th>On Hand</th>
+                <th>
+                    Status
+                </th>
+                <th class="nosort"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Outlet.OutletName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ElectricityBill)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OutletOperationCost)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OutletStaffSalary)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OtherExpense)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Month)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CashOnHand)
+                    </td>
+                    <td>
+                        @if(item.IsReceived == false)
+                        {
+                            <span class="text-warning">Pending</span>
+                        }else
+                        {
+                            <span class="text-success">Received</span>
+                        }
+                    </td>
+                    <td>
+                        <ul class="actionList">
+                            <li>
+                                <a data-id="@item.ExpenseID" href="javascript:void(0)" class="ViewBtn cmn-btn btn btn-success">
+                                    <i class="fa fa-th-list" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-id="@item.ExpenseID" href="javascript:void(0)" class="delBtn cmn-btn btn btn-danger">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </section>
+@section scripts
+{
+    <script>
+        $('#ItemShow').DataTable({
+            'aoColumnDefs': [{
+                'bSortable': false,
+                'aTargets': ['nosort']
+            }]
+        });
+    </script>
+}
